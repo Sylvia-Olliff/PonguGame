@@ -3,7 +3,7 @@ using SFML.System;
 
 namespace PonguGame.model
 {
-    public abstract class Entity
+    public abstract class Entity : SceneNode
     {
         protected Sprite _model;
         protected Shape _boundingBox;
@@ -25,9 +25,10 @@ namespace PonguGame.model
             _velocity = new Vector2f(vx, vy);
         }
 
-        public Vector2f getVelocity()
+        public override void DrawCurrent(RenderTarget target, RenderStates states)
         {
-            return _velocity;
+            _model.Draw(target, states);
+            _boundingBox.Draw(target, states);
         }
     }
 }
