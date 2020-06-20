@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using SFML.Graphics;
 
@@ -12,25 +11,18 @@ namespace PonguGame.resources
         private const string RESOURCE_PATH_COMPONENTS = "components/";
         private const string RESOURCE_PATH_FONTS = "fonts/";
 
-        private Uri _gameDirectoryRoot;
-        private Uri _gameDirectoryTextures;
-        private Uri _gameDirectoryComponents;
-        private Uri _gameDirectoryFonts;
+        public Uri GameDirectoryTextures { get; }
 
-        public Uri GameDirectoryRoot => _gameDirectoryRoot;
+        public Uri GameDirectoryComponents { get; }
 
-        public Uri GameDirectoryTextures => _gameDirectoryTextures;
-
-        public Uri GameDirectoryComponents => _gameDirectoryComponents;
-
-        public Uri GameDirectoryFonts => _gameDirectoryFonts;
+        public Uri GameDirectoryFonts { get; }
 
         public ResourceLoader(Uri pathToRoot)
         {
-            _gameDirectoryRoot = new Uri(Path.Combine(pathToRoot.LocalPath, RESOURCE_PATH_ROOT));
-            _gameDirectoryComponents = new Uri(Path.Combine(_gameDirectoryRoot.LocalPath, RESOURCE_PATH_COMPONENTS));
-            _gameDirectoryTextures = new Uri(Path.Combine(_gameDirectoryRoot.LocalPath, RESOURCE_PATH_TEXTURES));
-            _gameDirectoryFonts = new Uri(Path.Combine(_gameDirectoryFonts.LocalPath, RESOURCE_PATH_FONTS));
+            var gameDirectoryRoot = new Uri(Path.Combine(pathToRoot.LocalPath, RESOURCE_PATH_ROOT));
+            GameDirectoryComponents = new Uri(Path.Combine(gameDirectoryRoot.LocalPath, RESOURCE_PATH_COMPONENTS));
+            GameDirectoryTextures = new Uri(Path.Combine(gameDirectoryRoot.LocalPath, RESOURCE_PATH_TEXTURES));
+            GameDirectoryFonts = new Uri(Path.Combine(gameDirectoryRoot.LocalPath, RESOURCE_PATH_FONTS));
         }
 
         public Texture LoadTexture(string name)
@@ -40,7 +32,15 @@ namespace PonguGame.resources
 
         public Font LoadFont(string name)
         {
-            return new Font(Path.Combine(GameDirectoryFonts.LocalPath, $"{name}.ttf"));
+            var filePathTtf = Path.Combine(GameDirectoryFonts.LocalPath, $"{name}.TTF");
+            if (File.Exists(filePathTtf))
+                return new Font(filePathTtf);
+            
+            var filePathFon = Path.Combine(GameDirectoryFonts.LocalPath, $"{name}.fon");
+            if (File.Exists(filePathFon))
+                return new Font(filePathFon);
+            
+            throw new FileNotFoundException("Error loading font file!", name);
         }
     }
 }

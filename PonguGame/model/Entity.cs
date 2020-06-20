@@ -25,10 +25,6 @@ namespace PonguGame.model
 
         public override void UpdateCurrent(Time deltaTime)
         {
-            // Avoids recalculating position when not moving, and removes jitter from tiny velocity.
-            if ((int) _velocity.X == 0 && (int) _velocity.Y == 0)
-                return;
-            
             // Move the bounding box first, just in case
             _boundingBox.Position += _velocity * deltaTime.AsSeconds();
             _model.Position += _velocity * deltaTime.AsSeconds();

@@ -5,7 +5,6 @@
         Background,
         Player,
         Effects,
-        Menu,
-        LayerCount
+        Menu
     }
 }

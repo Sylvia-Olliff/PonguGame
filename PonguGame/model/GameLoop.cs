@@ -11,7 +11,7 @@ namespace PonguGame.model
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
         
-        protected List<Drawable> _entities = new List<Drawable>();
+        protected List<SceneNode> _entities = new List<SceneNode>();
 
         public RenderWindow Window
         {

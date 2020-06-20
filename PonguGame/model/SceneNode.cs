@@ -6,21 +6,21 @@ namespace PonguGame.model
 {
     public class SceneNode : Transformable, Drawable
     {
-        private Dictionary<uint, SceneNode> _children = new Dictionary<uint, SceneNode>();
+        private List<SceneNode> _children = new List<SceneNode>();
         private SceneNode _parent = null;
 
-        public void AttachChild(KeyValuePair<uint, SceneNode> child)
+        public void AttachChild(SceneNode child)
         {
-            child.Value._parent = this;
-            _children.Add(child.Key, child.Value);
+            child._parent = this;
+            _children.Add(child);
         }
 
-        public SceneNode DetachChild(uint id)
+        public SceneNode DetachChild(SceneNode child)
         {
-            if (!_children.ContainsKey(id)) return null;
+            if (!_children.Contains(child))
+                return null;
             
-            var child = _children[id];
-            _children.Remove(id);
+            _children.Remove(child);
             return child;
         }
 
@@ -44,7 +44,7 @@ namespace PonguGame.model
             DrawCurrent(target, states);
             foreach (var child in _children)
             {
-                child.Value.Draw(target, states);
+                child.Draw(target, states);
             }
         }
 
@@ -62,7 +62,7 @@ namespace PonguGame.model
         {
             foreach (var child in _children)
             {
-                child.Value.Update(deltaTime);
+                child.Update(deltaTime);
             }
         }
     }
