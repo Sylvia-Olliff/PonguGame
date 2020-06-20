@@ -9,9 +9,16 @@ namespace PonguGame.resources
         private static bool _registriesLoaded = false;
         private static readonly ConcurrentDictionary<string, Sprite> EntityRegistry = new ConcurrentDictionary<string, Sprite>();
         private static readonly ConcurrentDictionary<string, Shape> ObjectRegistry = new ConcurrentDictionary<string, Shape>();
+        private static readonly ConcurrentDictionary<string, Texture> TextureRegistry = new ConcurrentDictionary<string, Texture>();
         private static readonly ResourceLoader _resourceLoader = new ResourceLoader(new Uri(Environment.CurrentDirectory));
 
         public static bool RegistriesLoaded => _registriesLoaded;
+
+        private static void CheckRegistryLoadedStatus()
+        {
+            if (!_registriesLoaded)
+                throw new AccessViolationException($"Attempt to access registry before Registration phase is complete!");
+        }
 
         public static void RegisterEntity(string name, Sprite sprite)
         {
@@ -20,8 +27,10 @@ namespace PonguGame.resources
             
             try
             {
-                sprite.Texture = _resourceLoader.LoadTexture(name);
+                var texture = _resourceLoader.LoadTexture(name);
+                sprite.Texture = texture;
                 EntityRegistry.TryAdd(name, sprite);
+                TextureRegistry.TryAdd(name, texture);
             }
             catch (Exception e)
             {
@@ -37,8 +46,10 @@ namespace PonguGame.resources
             
             try
             {
-                shape.Texture = _resourceLoader.LoadTexture(name);
+                var texture = _resourceLoader.LoadTexture(name);
+                shape.Texture = texture;
                 ObjectRegistry.TryAdd(name, shape);
+                TextureRegistry.TryAdd(name, texture);
             }
             catch (Exception e)
             {
@@ -57,6 +68,7 @@ namespace PonguGame.resources
         {
             try
             {
+                CheckRegistryLoadedStatus();
                 return EntityRegistry.TryGetValue(name, out var value) ? value : null;
             }
             catch (Exception e)
@@ -67,10 +79,26 @@ namespace PonguGame.resources
             }
         }
 
+        public static Texture GetTextureByName(string name)
+        {
+            try
+            {
+                CheckRegistryLoadedStatus();
+                return TextureRegistry.TryGetValue(name, out var value) ? value : null;
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"Error retrieving Texture: {name}");
+                Console.Error.WriteLine(e);
+                return null;
+            }
+        }
+
         public static T GetObjectByName<T>(string name) where T : Shape, new()
         {
             try
             {
+                CheckRegistryLoadedStatus();
                 return (T) (ObjectRegistry.TryGetValue(name, out var value) ? value : new T());
             }
             catch (Exception e)
