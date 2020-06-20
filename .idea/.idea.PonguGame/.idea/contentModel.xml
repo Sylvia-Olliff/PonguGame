@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\joeol\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\joeol\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_PonguGame.633173810.00" t="ExcludeRecursive" />
+    <e p="C:\Users\joeol\source\repos\PonguGame" t="IncludeFlat">
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="PonguGame" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="csfml-Audio.dll" t="Include" />
+        <e p="csfml-Graphics.dll" t="Include" />
+        <e p="csfml-System.dll" t="Include" />
+        <e p="csfml-Window.dll" t="Include" />
+        <e p="game" t="Include">
+          <e p="Pongu.cs" t="Include" />
+        </e>
+        <e p="lib" t="Include" />
+        <e p="model" t="Include">
+          <e p="GameLoop.cs" t="Include" />
+          <e p="GameTime.cs" t="Include" />
+          <e p="Resource.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="openal32.dll" t="Include" />
+        <e p="packages.config" t="Include" />
+        <e p="PonguGame.csproj" t="IncludeRecursive" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="resources" t="Include">
+          <e p="ResourceLoader.cs" t="Include" />
+          <e p="ResourceRegistry.cs" t="Include" />
+        </e>
+        <e p="util" t="Include" />
+      </e>
+      <e p="PonguGame.sln" t="IncludeFlat" />
+    </e>
+  </component>
+</project>
