@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.ComponentModel;
+using System.Drawing;
+using PonguGame.lib;
 using SFML.Graphics;
 
 namespace PonguGame.resources
@@ -10,8 +13,18 @@ namespace PonguGame.resources
         private static readonly ConcurrentDictionary<string, Sprite> EntityRegistry = new ConcurrentDictionary<string, Sprite>();
         private static readonly ConcurrentDictionary<string, Shape> ObjectRegistry = new ConcurrentDictionary<string, Shape>();
         private static readonly ConcurrentDictionary<string, Texture> TextureRegistry = new ConcurrentDictionary<string, Texture>();
-        private static readonly ResourceLoader _resourceLoader = new ResourceLoader(new Uri(Environment.CurrentDirectory));
+        private static readonly ConcurrentDictionary<string, Font> FontRegistry = new ConcurrentDictionary<string, Font>();
+        private static readonly ResourceLoader Loader = new ResourceLoader(new Uri(Environment.CurrentDirectory));
 
+        static ResourceRegistry()
+        {
+            foreach (var fontType in (Fonts[]) Enum.GetValues(typeof(Fonts)))
+            {
+                var fontIdStr = fontType.ToDescriptionString();
+                FontRegistry.TryAdd(fontIdStr, Loader.LoadFont(fontIdStr));
+            }
+        }
+        
         public static bool RegistriesLoaded => _registriesLoaded;
 
         private static void CheckRegistryLoadedStatus()
@@ -27,7 +40,7 @@ namespace PonguGame.resources
             
             try
             {
-                var texture = _resourceLoader.LoadTexture(name);
+                var texture = Loader.LoadTexture(name);
                 sprite.Texture = texture;
                 EntityRegistry.TryAdd(name, sprite);
                 TextureRegistry.TryAdd(name, texture);
@@ -46,7 +59,7 @@ namespace PonguGame.resources
             
             try
             {
-                var texture = _resourceLoader.LoadTexture(name);
+                var texture = Loader.LoadTexture(name);
                 shape.Texture = texture;
                 ObjectRegistry.TryAdd(name, shape);
                 TextureRegistry.TryAdd(name, texture);
@@ -107,6 +120,12 @@ namespace PonguGame.resources
                 Console.Error.WriteLine(e);
                 return null;
             }
+        }
+
+        public static Font GetFont(Fonts fontType)
+        {
+            FontRegistry.TryGetValue(fontType.ToDescriptionString(), out var value);
+            return value;
         }
     }
 }

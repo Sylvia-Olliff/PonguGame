@@ -59,11 +59,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="game\Pongu.cs" />
+    <Compile Include="lib\EnumExtensions.cs" />
+    <Compile Include="lib\Fonts.cs" />
     <Compile Include="lib\Layer.cs" />
     <Compile Include="model\Ball.cs" />
     <Compile Include="model\Entity.cs" />
     <Compile Include="model\GameLoop.cs" />
     <Compile Include="model\GameTime.cs" />
+    <Compile Include="model\Menu.cs" />
+    <Compile Include="model\Option.cs" />
     <Compile Include="model\Paddle.cs" />
     <Compile Include="model\Resource.cs" />
     <Compile Include="model\SceneNode.cs" />
