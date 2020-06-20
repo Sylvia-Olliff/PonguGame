@@ -13,6 +13,9 @@ namespace PonguGame.model
         {
             _model = model;
             _boundingBox = boundingBox;
+
+            var modelBounds = _model.GetLocalBounds();
+            _model.Origin = new Vector2f(modelBounds.Width / 2.0f, modelBounds.Height / 2.0f);
         }
 
         public void SetVelocity(Vector2f velocity)
@@ -20,15 +23,11 @@ namespace PonguGame.model
             _velocity = velocity;
         }
 
-        public void SetVelocity(float vx, float vy)
+        public override void UpdateCurrent(Time deltaTime)
         {
-            _velocity = new Vector2f(vx, vy);
-        }
-
-        public override void DrawCurrent(RenderTarget target, RenderStates states)
-        {
-            _model.Draw(target, states);
-            _boundingBox.Draw(target, states);
+            // Move the bounding box first, just in case
+            _boundingBox.Position += _velocity * deltaTime.AsSeconds();
+            _model.Position += _velocity * deltaTime.AsSeconds();
         }
     }
 }
