@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PonguGame.lib;
 using SFML.Graphics;
 using SFML.System;
 
@@ -8,8 +9,21 @@ namespace PonguGame.model
     {
         private List<SceneNode> _children = new List<SceneNode>();
         private SceneNode _parent = null;
+        
+        public Layer SceneLayer { get; private set; }
 
+        public SceneNode(Layer sceneLayer)
+        {
+            SceneLayer = sceneLayer;
+        }
+        
         public void AttachChild(SceneNode child)
+        {
+            child._parent = this;
+            _children.Add(child);
+        }
+
+        public void AttachChild<T>(ref T child) where T : SceneNode
         {
             child._parent = this;
             _children.Add(child);

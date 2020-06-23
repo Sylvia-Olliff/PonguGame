@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using PonguGame.lib;
+using SFML.Graphics;
 using SFML.System;
 
 namespace PonguGame.model
@@ -7,7 +8,7 @@ namespace PonguGame.model
     {
         private readonly RectangleShape _border;
 
-        public WorldBorder(Vector2f size, Color containerColor, Color borderColor)
+        public WorldBorder(Layer layer, Vector2f size, Color containerColor, Color borderColor) : base(layer)
         {
             _border = new RectangleShape(size)
             {
@@ -17,7 +18,7 @@ namespace PonguGame.model
             };
         }
 
-        public WorldBorder(Vector2f size, Color containerColor, Color borderColor, float thickness)
+        public WorldBorder(Layer layer, Vector2f size, Color containerColor, Color borderColor, float thickness) : base (layer)
         {
             _border = new RectangleShape(size)
             {

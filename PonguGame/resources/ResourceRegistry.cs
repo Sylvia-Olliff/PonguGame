@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using PonguGame.lib;
+using PonguGame.model;
 using SFML.Graphics;
 
 namespace PonguGame.resources
@@ -14,6 +16,8 @@ namespace PonguGame.resources
         private static readonly ConcurrentDictionary<string, Shape> ObjectRegistry = new ConcurrentDictionary<string, Shape>();
         private static readonly ConcurrentDictionary<string, Texture> TextureRegistry = new ConcurrentDictionary<string, Texture>();
         private static readonly ConcurrentDictionary<string, Font> FontRegistry = new ConcurrentDictionary<string, Font>();
+        private static readonly ConcurrentDictionary<Type, IRegistryItem> SingletonRegistry = new ConcurrentDictionary<Type, IRegistryItem>();
+        
         private static readonly ResourceLoader Loader = new ResourceLoader(new Uri(Environment.CurrentDirectory));
 
         static ResourceRegistry()
@@ -71,6 +75,22 @@ namespace PonguGame.resources
             }
         }
 
+        public static void RegisterSingleton<T>(T instance) where T : SceneNode
+        {
+            if (_registriesLoaded)
+                throw new AccessViolationException($"Attempt to register an object after Registration phase! Name: {typeof(T)}");
+
+            try
+            {
+                SingletonRegistry.AddOrUpdate(typeof(T), type => new SingletonRegistry<T>(instance), (type, item) => new SingletonRegistry<T>(instance));
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"Error registering Singleton {typeof(T)}");
+                Console.Error.WriteLine(e);
+            }
+        }
+
         public static void SetInitialized()
         {
             if (!_registriesLoaded)
@@ -119,6 +139,25 @@ namespace PonguGame.resources
                 Console.Error.WriteLine($"Error retrieving Object: {name}");
                 Console.Error.WriteLine(e);
                 return null;
+            }
+        }
+
+        public static T GetSingleton<T>() where T : SceneNode
+        {
+            try
+            {
+                CheckRegistryLoadedStatus();
+                SingletonRegistry.TryGetValue(typeof(SingletonRegistry<T>), out var value);
+                
+                if (value == null)
+                    throw new MissingMemberException($"Singleton {typeof(T)} not registered!");
+                
+                return ((SingletonRegistry<T>) value).Get();
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"Error Retrieving singleton: {typeof(T)}");
+                throw;
             }
         }
 

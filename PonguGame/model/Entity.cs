@@ -1,15 +1,16 @@
-﻿using SFML.Graphics;
+﻿using PonguGame.lib;
+using SFML.Graphics;
 using SFML.System;
 
 namespace PonguGame.model
 {
-    public abstract class Entity : SceneNode
+    public abstract class Entity<T> : SceneNode where T : Transformable, Drawable
     {
         protected Sprite _model;
-        protected Shape _boundingBox;
+        protected T _boundingBox;
         protected Vector2f _velocity;
 
-        public Entity(Sprite model, Shape boundingBox)
+        public Entity(Layer layer, Sprite model, T boundingBox) : base(layer)
         {
             _model = model;
             _boundingBox = boundingBox;

@@ -71,12 +71,15 @@
     <Compile Include="model\Paddle.cs" />
     <Compile Include="model\Resource.cs" />
     <Compile Include="model\SceneNode.cs" />
+    <Compile Include="model\ScoreBoard.cs" />
     <Compile Include="model\World.cs" />
     <Compile Include="model\WorldBorder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="resources\IRegistryItem.cs" />
     <Compile Include="resources\ResourceLoader.cs" />
     <Compile Include="resources\ResourceRegistry.cs" />
+    <Compile Include="resources\SingletonRegistry.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="util" />
