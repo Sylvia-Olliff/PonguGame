@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using PonguGame.lib;
 using PonguGame.model;
 using SFML.Graphics;
@@ -12,8 +9,7 @@ namespace PonguGame.resources
     public static class ResourceRegistry
     {
         private static bool _registriesLoaded = false;
-        private static readonly ConcurrentDictionary<string, Sprite> EntityRegistry = new ConcurrentDictionary<string, Sprite>();
-        private static readonly ConcurrentDictionary<string, Shape> ObjectRegistry = new ConcurrentDictionary<string, Shape>();
+        private static readonly ConcurrentDictionary<Entites, IRegistryItem> EntityRegistry = new ConcurrentDictionary<Entites, IRegistryItem>();
         private static readonly ConcurrentDictionary<string, Texture> TextureRegistry = new ConcurrentDictionary<string, Texture>();
         private static readonly ConcurrentDictionary<string, Font> FontRegistry = new ConcurrentDictionary<string, Font>();
         private static readonly ConcurrentDictionary<Type, IRegistryItem> SingletonRegistry = new ConcurrentDictionary<Type, IRegistryItem>();
@@ -27,6 +23,12 @@ namespace PonguGame.resources
                 var fontIdStr = fontType.ToDescriptionString();
                 FontRegistry.TryAdd(fontIdStr, Loader.LoadFont(fontIdStr));
             }
+
+            foreach (var texture in (Textures[]) Enum.GetValues(typeof(Textures)))
+            {
+                var textureFileName = texture.ToDescriptionString();
+                TextureRegistry.TryAdd(textureFileName, Loader.LoadTexture(textureFileName));
+            }
         }
         
         public static bool RegistriesLoaded => _registriesLoaded;
@@ -37,40 +39,19 @@ namespace PonguGame.resources
                 throw new AccessViolationException($"Attempt to access registry before Registration phase is complete!");
         }
 
-        public static void RegisterEntity(string name, Sprite sprite)
+        public static void RegisterEntity<T>(Entites entity, T instance) where T : SceneNode
         {
             if (_registriesLoaded)
-                throw new AccessViolationException($"Attempt to register an entity after Registration phase! Name: {name}");
+                throw new AccessViolationException($"Attempt to register an entity after Registration phase! Name: {entity}");
             
             try
             {
-                var texture = Loader.LoadTexture(name);
-                sprite.Texture = texture;
-                EntityRegistry.TryAdd(name, sprite);
-                TextureRegistry.TryAdd(name, texture);
+                EntityRegistry.AddOrUpdate(entity, s => new RegistryObject<T>(instance),
+                    (s, item) => new RegistryObject<T>(instance));
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Error adding Entity {name} to entity registry!");
-                Console.Error.WriteLine(e);
-            }
-        }
-
-        public static void RegisterShape(string name, Shape shape)
-        {
-            if (_registriesLoaded)
-                throw new AccessViolationException($"Attempt to register an object after Registration phase! Name: {name}");
-            
-            try
-            {
-                var texture = Loader.LoadTexture(name);
-                shape.Texture = texture;
-                ObjectRegistry.TryAdd(name, shape);
-                TextureRegistry.TryAdd(name, texture);
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine($"Error adding Entity {name} to object registry!");
+                Console.Error.WriteLine($"Error adding Entity {entity} to entity registry!");
                 Console.Error.WriteLine(e);
             }
         }
@@ -82,7 +63,7 @@ namespace PonguGame.resources
 
             try
             {
-                SingletonRegistry.AddOrUpdate(typeof(T), type => new SingletonRegistry<T>(instance), (type, item) => new SingletonRegistry<T>(instance));
+                SingletonRegistry.AddOrUpdate(typeof(T), type => new RegistryObject<T>(instance), (type, item) => new RegistryObject<T>(instance));
             }
             catch (Exception e)
             {
@@ -97,67 +78,56 @@ namespace PonguGame.resources
                 _registriesLoaded = true;
         }
 
-        public static Sprite GetEntityByName(string name)
+        public static ref T GetEntity<T>(Entites entity) where T : SceneNode
         {
             try
             {
                 CheckRegistryLoadedStatus();
-                return EntityRegistry.TryGetValue(name, out var value) ? value : null;
+                EntityRegistry.TryGetValue(entity, out var value);
+                
+                if (value == null)
+                    throw new MissingMemberException($"Entity id: {entity} isn't registered!'");
+
+                return ref ((RegistryObject<T>) value).Get();
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Error retrieving Entity: {name}");
+                Console.Error.WriteLine($"Error retrieving Entity: {entity}");
+                Console.Error.WriteLine(e);
+                throw;
+            }
+        }
+
+        public static Texture GetTexture(Textures texture)
+        {
+            try
+            {
+                return TextureRegistry.TryGetValue(texture.ToDescriptionString(), out var value) ? value : null;
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"Error retrieving Texture: {texture.ToDescriptionString()}");
                 Console.Error.WriteLine(e);
                 return null;
             }
         }
 
-        public static Texture GetTextureByName(string name)
+        public static ref T GetSingleton<T>() where T : SceneNode
         {
             try
             {
                 CheckRegistryLoadedStatus();
-                return TextureRegistry.TryGetValue(name, out var value) ? value : null;
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine($"Error retrieving Texture: {name}");
-                Console.Error.WriteLine(e);
-                return null;
-            }
-        }
-
-        public static T GetObjectByName<T>(string name) where T : Shape, new()
-        {
-            try
-            {
-                CheckRegistryLoadedStatus();
-                return (T) (ObjectRegistry.TryGetValue(name, out var value) ? value : new T());
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine($"Error retrieving Object: {name}");
-                Console.Error.WriteLine(e);
-                return null;
-            }
-        }
-
-        public static T GetSingleton<T>() where T : SceneNode
-        {
-            try
-            {
-                CheckRegistryLoadedStatus();
-                SingletonRegistry.TryGetValue(typeof(SingletonRegistry<T>), out var value);
+                SingletonRegistry.TryGetValue(typeof(T), out var value);
                 
                 if (value == null)
                     throw new MissingMemberException($"Singleton {typeof(T)} not registered!");
                 
-                return ((SingletonRegistry<T>) value).Get();
+                return ref ((RegistryObject<T>) value).Get();
             }
             catch (Exception e)
             {
                 Console.Error.WriteLine($"Error Retrieving singleton: {typeof(T)}");
-                throw;
+                throw e;
             }
         }
 

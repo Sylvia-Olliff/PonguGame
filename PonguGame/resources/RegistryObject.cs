@@ -1,13 +1,11 @@
-﻿using System.Diagnostics;
-using PonguGame.model;
-
+﻿
 namespace PonguGame.resources
 {
-    public class SingletonRegistry<T> : IRegistryItem
+    public class RegistryObject<T> : IRegistryItem
     {
         private T _self;
         
-        public SingletonRegistry(T instance)
+        public RegistryObject(T instance)
         {
             _self = instance;
         }

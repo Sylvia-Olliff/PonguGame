@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -10,14 +9,8 @@ namespace PonguGame.model
     {
         public const int TARGET_FPS = 60;
         public const float TIME_UNTIL_UPDATE = 1f / TARGET_FPS;
-        
-        protected List<SceneNode> _entities = new List<SceneNode>();
 
-        public RenderWindow Window
-        {
-            get;
-            protected set;
-        }
+        public RenderWindow Window;
 
         public GameTime GameTime
         {

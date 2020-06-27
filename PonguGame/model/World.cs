@@ -4,6 +4,7 @@ using PonguGame.lib;
 using PonguGame.resources;
 using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
 
 namespace PonguGame.model
 {
@@ -24,40 +25,68 @@ namespace PonguGame.model
             _window = window;
             _worldView = new View(_window.DefaultView);
             _worldBounds = new FloatRect(0f, 0f, _worldView.Size.X, _worldView.Size.Y);
-            _spawnPosition = new Vector2f(20f, _worldBounds.Height / 2f);
+            _spawnPosition = new Vector2f((_worldBounds.Width / 50f) * 2f, _worldBounds.Height / 2f);
 
+            _player = ResourceRegistry.GetEntity<Paddle>(Entites.PlayerPaddle);
             BuildScene();
-        }
-
-        private void RegisterSingletons()
-        {
-            ResourceRegistry.RegisterSingleton(new ScoreBoard(ref _window));
-            ResourceRegistry.RegisterSingleton(new WorldBorder(Layer.Background, new Vector2f(_worldBounds.Left + 10f, _worldBounds.Height - 10f), Color.Black, Color.White));
         }
         
         private void BuildScene()
         {
             // First Initialization pass
             foreach (var layer in (Layer[]) Enum.GetValues(typeof(Layer)))
-            {
                 _sceneMatrix.Add(layer, new SceneNode(layer));
-            }
 
-            // Add Game border (don't need to keep a reference to this as it never changes or updates)
-            _sceneMatrix[Layer.Background].AttachChild(ResourceRegistry.GetSingleton<WorldBorder>());
+            // Add Game border
+            _sceneMatrix[Layer.Background]
+                .AttachChild(ref
+                    ResourceRegistry.GetSingleton<WorldBorder>()
+                        .Init(ref _window, new Vector2f(_worldBounds.Width - 20f, _worldBounds.Height - 20f), Color.Black,
+                            Color.White)
+                )
+                // Add Scoreboard - sub to game border
+                .AttachChild(ref
+                    ResourceRegistry.GetSingleton<ScoreBoard>()
+                        .Init(ref _window)
+                );
+
+            // Add Player paddle
+            _sceneMatrix[Layer.Player]
+                .AttachChild(ref 
+                    ResourceRegistry.GetEntity<Paddle>(Entites.PlayerPaddle)
+                        .Init(_spawnPosition)
+                );
             
-            // Add Score board
-            _sceneMatrix[Layer.Background].AttachChild(ResourceRegistry.GetSingleton<ScoreBoard>());
+            // Add opponent paddle
+            _sceneMatrix[Layer.Player]
+                .AttachChild(ref 
+                    ResourceRegistry.GetEntity<Paddle>(Entites.OpponentPaddle)
+                        .Init(new Vector2f((_worldBounds.Width / 50f) * 48f, _spawnPosition.Y))
+                );
+            
+            Mouse.SetPosition((Vector2i) _worldView.Center, _window);
         }
 
         public void Update(Time deltaTime)
         {
+            var mouseCoords = Mouse.GetPosition(_window);
+            var mouseVector = new Vector2f(0f, mouseCoords.Y);
+            if (Math.Abs(_player.Position.Y - mouseVector.Y) >= 1.5f) // normalize movement to reduce noise
+                _player.SetVelocity(mouseVector);
             
+            _sceneMatrix[Layer.Background].Update(deltaTime);
+            _sceneMatrix[Layer.Player].Update(deltaTime);
+            _sceneMatrix[Layer.Effects].Update(deltaTime);
+            _sceneMatrix[Layer.Menu].Update(deltaTime);
         }
 
         public void Draw()
         {
-            
+            _window.SetView(_worldView);
+            _window.Draw(_sceneMatrix[Layer.Background]);
+            _window.Draw(_sceneMatrix[Layer.Player]);
+            _window.Draw(_sceneMatrix[Layer.Effects]);
+            _window.Draw(_sceneMatrix[Layer.Menu]);
         }
     }
 }

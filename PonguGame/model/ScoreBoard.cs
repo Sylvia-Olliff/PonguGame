@@ -15,9 +15,16 @@ namespace PonguGame.model
         private Text _playerScoreDisplay;
         private Text _opponentScoreDisplay;
 
-        private readonly RenderWindow windowRef;
+        private ScoreBoard _self;
 
-        public ScoreBoard(ref RenderWindow window) : base(Layer.Background)
+        private RenderWindow windowRef;
+
+        public ScoreBoard() : base(Layer.Background)
+        {
+            _self = this;
+        }
+
+        public ref ScoreBoard Init(ref RenderWindow window)
         {
             _playerScore = 0;
             _opponentScore = 0;
@@ -31,6 +38,8 @@ namespace PonguGame.model
             _opponentScoreChanged = true;
             
             SetScorePositions();
+
+            return ref _self;
         }
 
         private void SetScorePositions()
@@ -43,8 +52,8 @@ namespace PonguGame.model
             _playerScoreDisplay.Origin = new Vector2f(playerCenterChar.X / 2.0f, playerCenterChar.Y / 2.0f);
             _opponentScoreDisplay.Origin = new Vector2f(opponentCenterChar.X / 2.0f, opponentCenterChar.Y / 2.0f);
             
-            _playerScoreDisplay.Position = new Vector2f(windowRef.Size.X / 5.0f, windowRef.Size.Y / 10.0f);
-            _opponentScoreDisplay.Position = new Vector2f((windowRef.Size.X / 5.0f) * 4f, windowRef.Size.Y / 10.0f);
+            _playerScoreDisplay.Position = new Vector2f(windowRef.Size.X / 8.0f, windowRef.Size.Y / 10.0f);
+            _opponentScoreDisplay.Position = new Vector2f((windowRef.Size.X / 8.0f) * 6f, windowRef.Size.Y / 10.0f);
         }
 
         public void ScorePoint(bool forPlayer)

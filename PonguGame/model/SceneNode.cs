@@ -8,28 +8,30 @@ namespace PonguGame.model
     public class SceneNode : Transformable, Drawable
     {
         private List<SceneNode> _children = new List<SceneNode>();
-        private SceneNode _parent = null;
+        private SceneNode _parent;
         
-        public Layer SceneLayer { get; private set; }
+        public Layer SceneLayer { get; }
 
         public SceneNode(Layer sceneLayer)
         {
             SceneLayer = sceneLayer;
         }
         
-        public void AttachChild(SceneNode child)
+        public SceneNode AttachChild(SceneNode child)
         {
             child._parent = this;
             _children.Add(child);
+            return child;
         }
 
-        public void AttachChild<T>(ref T child) where T : SceneNode
+        public T AttachChild<T>(ref T child) where T : SceneNode
         {
             child._parent = this;
             _children.Add(child);
+            return child;
         }
 
-        public SceneNode DetachChild(SceneNode child)
+        public SceneNode DetachChild(ref SceneNode child)
         {
             if (!_children.Contains(child))
                 return null;

@@ -59,9 +59,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="game\Pongu.cs" />
+    <Compile Include="lib\Entites.cs" />
     <Compile Include="lib\EnumExtensions.cs" />
     <Compile Include="lib\Fonts.cs" />
     <Compile Include="lib\Layer.cs" />
+    <Compile Include="lib\Settings.cs" />
+    <Compile Include="lib\Textures.cs" />
     <Compile Include="model\Ball.cs" />
     <Compile Include="model\Entity.cs" />
     <Compile Include="model\GameLoop.cs" />
@@ -79,15 +82,31 @@
     <Compile Include="resources\IRegistryItem.cs" />
     <Compile Include="resources\ResourceLoader.cs" />
     <Compile Include="resources\ResourceRegistry.cs" />
-    <Compile Include="resources\SingletonRegistry.cs" />
+    <Compile Include="resources\RegistryObject.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="assets\components" />
     <Folder Include="util" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\fonts\game-effect-font.TTF">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\fonts\game-score-font.TTF">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\fonts\menu-title-font.TTF">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\textures\ball_texture.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\textures\paddle_texture.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="csfml-Audio.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
