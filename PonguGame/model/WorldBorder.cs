@@ -57,7 +57,7 @@ namespace PonguGame.model
                 return true;
             if (position.X >= Border.GetGlobalBounds().Width - Border.OutlineThickness)
                 return true;
-
+            
             return false;
         }
 

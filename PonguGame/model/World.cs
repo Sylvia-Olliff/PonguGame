@@ -69,10 +69,14 @@ namespace PonguGame.model
 
         public void Update(Time deltaTime)
         {
-            var mouseCoords = Mouse.GetPosition(_window);
-            var mouseVector = new Vector2f(0f, mouseCoords.Y);
-            if (Math.Abs(_player.Position.Y - mouseVector.Y) >= 1.5f) // normalize movement to reduce noise
-                _player.SetVelocity(mouseVector);
+
+            var windowCenter = (Vector2i) (_window.Size / 2u);
+            var mousePos = Mouse.GetPosition(_window);
+            var delta = (Vector2f) (windowCenter - mousePos);
+            Mouse.SetPosition(windowCenter, _window);
+            delta.X = 0;
+            delta.Y *= 2f;
+            _player.SetVelocity(delta);
             
             _sceneMatrix[Layer.Background].Update(deltaTime);
             _sceneMatrix[Layer.Player].Update(deltaTime);

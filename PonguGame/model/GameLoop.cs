@@ -24,14 +24,21 @@ namespace PonguGame.model
             protected set;
         }
 
+        private bool _isPaused = false;
+
         protected GameLoop(uint windowWidth, uint windowHeight, string windowTitle, Color windowClearColor)
         {
             WindowClearColor = windowClearColor;
             Window = new RenderWindow(new VideoMode(windowWidth, windowHeight), windowTitle);
             GameTime = new GameTime();
+            
             Window.Closed += WindowOnClosed;
+            Window.GainedFocus += WindowOnGainedFocus;
+            Window.LostFocus += WindowOnLostFocus;
+            Window.KeyPressed += WindowOnKeyPressed;
+            
+            Window.SetMouseCursorVisible(false);
         }
-
 
         public void Run()
         {
@@ -59,7 +66,8 @@ namespace PonguGame.model
                 
                 GameTime.Update(totalTimeBeforeUpdate, clock.ElapsedTime.AsSeconds());
                 totalTimeBeforeUpdate= 0f;
-                Update(GameTime);
+                if (!_isPaused)
+                    Update(GameTime);
                     
                 Window.Clear(WindowClearColor);
                 Draw(GameTime);
@@ -74,7 +82,26 @@ namespace PonguGame.model
         
         private void WindowOnClosed(object sender, EventArgs e)
         {
+            Window.SetMouseCursorVisible(true); // Make sure we give the player the mouse back
             Window.Close();
+        }
+        
+        private void WindowOnLostFocus(object sender, EventArgs e)
+        {
+            _isPaused = true;
+            Window.SetMouseCursorVisible(true);
+        }
+
+        private void WindowOnGainedFocus(object sender, EventArgs e)
+        {
+            _isPaused = false;
+            Window.SetMouseCursorVisible(false);
+        }
+
+        private void WindowOnKeyPressed(object sender, KeyEventArgs e)
+        {
+            if (e.Code == Keyboard.Key.Escape)
+                Window.Close();
         }
     }
 }

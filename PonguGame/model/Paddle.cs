@@ -28,25 +28,27 @@ namespace PonguGame.model
         public override void UpdateCurrent(Time deltaTime)
         {
             var windowBorder = ResourceRegistry.GetSingleton<WorldBorder>();
-            
-            _model.Position += _velocity * deltaTime.AsSeconds();
 
-            var bounds = _model.GetGlobalBounds();
+            var destination = _model.Position + _velocity * deltaTime.AsSeconds();
+
+            
             var borderBounds = windowBorder.Border.GetGlobalBounds();
             
-            if (bounds.Top <=
+            if (destination.Y - (_model.GetGlobalBounds().Height / 2f) <=
                 borderBounds.Top + windowBorder.Border.OutlineThickness)
             {
                 SetVelocity(new Vector2f());
-                _model.Position = new Vector2f(_model.Position.X, _model.Position.Y + borderBounds.Top + windowBorder.Border.OutlineThickness);
+                //  _model.Position = new Vector2f(_model.Position.X, _model.Position.Y + borderBounds.Top + windowBorder.Border.OutlineThickness);
             }
             
-            if (bounds.Top + bounds.Height >=
+            if (destination.Y + (_model.GetGlobalBounds().Height / 2f) >=
                 borderBounds.Height - windowBorder.Border.OutlineThickness)
             {
                 SetVelocity(new Vector2f());
-                _model.Position = new Vector2f(_model.Position.X, _model.Position.Y - (borderBounds.Top + windowBorder.Border.OutlineThickness));
+//                _model.Position = new Vector2f(_model.Position.X, _model.Position.Y - (borderBounds.Top + windowBorder.Border.OutlineThickness));
             }
+            
+            _model.Position += _velocity * deltaTime.AsSeconds();
         }
     }
 }

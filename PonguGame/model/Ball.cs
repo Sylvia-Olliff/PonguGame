@@ -1,4 +1,5 @@
 ﻿using PonguGame.lib;
+using PonguGame.resources;
 using SFML.Graphics;
 using SFML.System;
 
@@ -12,11 +13,11 @@ namespace PonguGame.model
             _self = this;
         }
 
-        public ref Ball Init(Vector2f startingPos, Vector2f startingVelocity)
+        public override void UpdateCurrent(Time deltaTime)
         {
-            _model.Position = startingPos;
-            _velocity = startingVelocity;
-            return ref _self;
-        } 
+            var windowBorder = ResourceRegistry.GetSingleton<WorldBorder>();
+            
+            
+        }
     }
 }
