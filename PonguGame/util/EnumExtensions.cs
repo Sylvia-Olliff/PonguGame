@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace PonguGame.lib
+namespace PonguGame.util
 {
     public static class EnumExtensions
     {

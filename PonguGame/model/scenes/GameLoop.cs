@@ -1,9 +1,10 @@
 ﻿using System;
+using PonguGame.model.entities;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
-namespace PonguGame.model
+namespace PonguGame.model.scenes
 {
     public abstract class GameLoop
     {

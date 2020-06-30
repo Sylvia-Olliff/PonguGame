@@ -1,9 +1,10 @@
 ﻿using System;
-using PonguGame.lib;
+using PonguGame.model.entities;
+using PonguGame.util;
 using PonguGame.resources;
 using SFML.Graphics;
 
-namespace PonguGame.model
+namespace PonguGame.model.menus
 {
     public class Option : Entity<RectangleShape>
     {

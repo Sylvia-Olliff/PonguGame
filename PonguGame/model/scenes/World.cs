@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using PonguGame.lib;
+using PonguGame.model.entities;
+using PonguGame.util;
 using PonguGame.resources;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
-namespace PonguGame.model
+namespace PonguGame.model.scenes
 {
     public class World
     {
@@ -17,6 +18,7 @@ namespace PonguGame.model
         private Vector2f _spawnPosition;
         
         private Paddle _player;
+        private Paddle _opponent;
 
         public World(ref RenderWindow window)
         {
@@ -28,6 +30,7 @@ namespace PonguGame.model
             _spawnPosition = new Vector2f((_worldBounds.Width / 50f) * 2f, _worldBounds.Height / 2f);
 
             _player = ResourceRegistry.GetEntity<Paddle>(Entites.PlayerPaddle);
+            _opponent = ResourceRegistry.GetEntity<Paddle>(Entites.OpponentPaddle);
             BuildScene();
         }
         
@@ -64,6 +67,13 @@ namespace PonguGame.model
                         .Init(new Vector2f((_worldBounds.Width / 50f) * 48f, _spawnPosition.Y))
                 );
             
+            // Add ball entity
+            _sceneMatrix[Layer.Player]
+                .AttachChild(ref 
+                    ResourceRegistry.GetEntity<Ball>(Entites.GameBall)
+                        .Init()
+                );
+            
             Mouse.SetPosition((Vector2i) _worldView.Center, _window);
         }
 
@@ -75,9 +85,10 @@ namespace PonguGame.model
             var delta = (Vector2f) (windowCenter - mousePos);
             Mouse.SetPosition(windowCenter, _window);
             delta.X = 0;
-            delta.Y *= 2f;
+            delta.Y *= 3f;
             _player.SetVelocity(delta);
             
+            _opponent.Logic();
             _sceneMatrix[Layer.Background].Update(deltaTime);
             _sceneMatrix[Layer.Player].Update(deltaTime);
             _sceneMatrix[Layer.Effects].Update(deltaTime);

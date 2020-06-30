@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using PonguGame.lib;
-using PonguGame.model;
+using PonguGame.util;
+using PonguGame.model.entities;
+using PonguGame.model.scenes;
 using SFML.Graphics;
 
 namespace PonguGame.resources

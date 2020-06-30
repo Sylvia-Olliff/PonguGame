@@ -1,4 +1,4 @@
-﻿using PonguGame.model;
+﻿using PonguGame.model.entities;
 
 namespace PonguGame.resources
 {

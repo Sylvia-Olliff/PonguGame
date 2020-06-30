@@ -1,4 +1,4 @@
-﻿namespace PonguGame.lib
+﻿namespace PonguGame.util
 {
     public enum Entites
     {

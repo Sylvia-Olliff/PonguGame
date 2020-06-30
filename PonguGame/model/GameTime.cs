@@ -1,4 +1,4 @@
-﻿namespace PonguGame.model
+﻿namespace PonguGame.model.entities
 {
     public class GameTime
     {

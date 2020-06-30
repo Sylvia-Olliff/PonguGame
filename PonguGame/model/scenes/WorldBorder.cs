@@ -1,9 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
-using PonguGame.lib;
+using PonguGame.util;
 using SFML.Graphics;
 using SFML.System;
 
-namespace PonguGame.model
+namespace PonguGame.model.scenes
 {
     public class WorldBorder : SceneNode
     {

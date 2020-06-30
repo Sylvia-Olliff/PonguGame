@@ -1,7 +1,7 @@
 ﻿using System;
 using SFML.Graphics;
 
-namespace PonguGame.model
+namespace PonguGame.model.entities
 {
     public struct Resource
     {

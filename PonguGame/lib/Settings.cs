@@ -1,20 +1,19 @@
 ﻿using SFML.Graphics;
 
-namespace PonguGame.lib
+namespace PonguGame.util
 {
     public static class Settings
     {
-        // Paddles
-        public const float PADDLE_WIDTH = 10f;
-        public const float PADDLE_HEIGHT = 50f;
-        
-        // Balls
-        public const float BALL_RADIUS = 8f;
-        
         // Game Window
         public const uint DEFAULT_WIDTH = 800;
         public const uint DEFAULT_HEIGHT = 600;
         public const string DEFAULT_TITLE = "Pongu Game";
         public static readonly Color DEFAULT_CLEAR_COLOR = Color.Black;
+        
+        // Opponent settings
+        public const float PADDLE_SPEED = 225f;
+        
+        // Ball Settings
+        public const float BALL_SPEED_INCREASE = 1.002f;
     }
 }

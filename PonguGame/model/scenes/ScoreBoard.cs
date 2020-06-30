@@ -1,9 +1,9 @@
-﻿using PonguGame.lib;
+﻿using PonguGame.util;
 using PonguGame.resources;
 using SFML.Graphics;
 using SFML.System;
 
-namespace PonguGame.model
+namespace PonguGame.model.scenes
 {
     public class ScoreBoard : SceneNode
     {
@@ -22,7 +22,10 @@ namespace PonguGame.model
         public ScoreBoard() : base(Layer.Background)
         {
             _self = this;
+            PlayerWasLastToScore = true;
         }
+
+        public bool PlayerWasLastToScore { get; private set; }
 
         public ref ScoreBoard Init(ref RenderWindow window)
         {
@@ -62,11 +65,13 @@ namespace PonguGame.model
             {
                 _playerScore++;
                 _playerScoreChanged = true;
+                PlayerWasLastToScore = true;
             }
             else
             {
                 _opponentScore++;
                 _opponentScoreChanged = true;
+                PlayerWasLastToScore = false;
             }
         }
 

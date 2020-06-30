@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using PonguGame.lib;
+using PonguGame.model.entities;
+using PonguGame.util;
 using SFML.Graphics;
 
-namespace PonguGame.model
+namespace PonguGame.model.menus
 {
     public class Menu : Entity<RectangleShape>
     {

@@ -1,10 +1,9 @@
-﻿using System;
-using PonguGame.lib;
-using PonguGame.model;
+﻿using PonguGame.util;
+using PonguGame.model.entities;
+using PonguGame.model.scenes;
 using PonguGame.resources;
 using SFML.Graphics;
 using SFML.System;
-using SFML.Window;
 
 namespace PonguGame.game
 {
@@ -28,9 +27,9 @@ namespace PonguGame.game
 
         private void RegisterEntities()
         {
-            ResourceRegistry.RegisterEntity(Entites.PlayerPaddle, new Paddle(new Sprite(ResourceRegistry.GetTexture(Textures.Paddle)), new RectangleShape(new Vector2f(Settings.PADDLE_WIDTH, Settings.PADDLE_HEIGHT))));
-            ResourceRegistry.RegisterEntity(Entites.OpponentPaddle, new Paddle(new Sprite(ResourceRegistry.GetTexture(Textures.Paddle)), new RectangleShape(new Vector2f(Settings.PADDLE_WIDTH, Settings.PADDLE_HEIGHT))));
-            ResourceRegistry.RegisterEntity(Entites.GameBall, new Ball(new Sprite(ResourceRegistry.GetTexture(Textures.Ball)), new CircleShape(Settings.BALL_RADIUS)));
+            ResourceRegistry.RegisterEntity(Entites.PlayerPaddle, new Paddle(new Sprite(ResourceRegistry.GetTexture(Textures.Paddle)), new RectangleShape(new Vector2f(ResourceRegistry.GetTexture(Textures.Paddle).Size.X, ResourceRegistry.GetTexture(Textures.Paddle).Size.Y))));
+            ResourceRegistry.RegisterEntity(Entites.OpponentPaddle, new Paddle(new Sprite(ResourceRegistry.GetTexture(Textures.Paddle)), new RectangleShape(new Vector2f(ResourceRegistry.GetTexture(Textures.Paddle).Size.X, ResourceRegistry.GetTexture(Textures.Paddle).Size.Y))));
+            ResourceRegistry.RegisterEntity(Entites.GameBall, new Ball(new Sprite(ResourceRegistry.GetTexture(Textures.Ball)), new CircleShape(ResourceRegistry.GetTexture(Textures.Ball).Size.X / 2f)));
         }
 
         public override void LoadContent()
@@ -42,7 +41,6 @@ namespace PonguGame.game
 
         public override void Initialize()
         {
-            //TODO: Set state values like random seeds and starting ball velocities.
             //TODO: Move the Init calls from BuildScene to here
             _world = new World(ref Window);
         }

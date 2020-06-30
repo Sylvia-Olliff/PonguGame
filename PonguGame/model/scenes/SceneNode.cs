@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using PonguGame.lib;
+using PonguGame.util;
 using SFML.Graphics;
 using SFML.System;
 
-namespace PonguGame.model
+namespace PonguGame.model.scenes
 {
     public class SceneNode : Transformable, Drawable
     {
